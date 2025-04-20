@@ -66,26 +66,26 @@ Now, the question asks: Does Leda tell the truth? We know from (5) that Leda tel
 def solution():
     Kristian = False
     Millie_says_Kristian = False
-    Vina_says_Jerry = True
-    Millicent_says_Vina = False
-    Raymond_says_Millicent = False
-    if Jerry_says_Fidel == Fidel:
-        Jerry = True
+    Maybelle_says_Millie = True
+    Fidel_says_Maybelle = False
+    Leda_says_Fidel = False
+    if Millie_says_Kristian == Kristian:
+        Millie = True
     else:
-        Jerry = False
-    if Vina_says_Jerry == Jerry:
-        Vina = True
+        Millie = False
+    if Maybelle_says_Millie == Millie:
+        Maybelle = True
     else:
-        Vina = False
-    if Millicent_says_Vina == Vina:
-        Millicent = True
+        Maybelle = False
+    if Fidel_says_Maybelle == Maybelle:
+        Fidel = True
     else:
-        Millicent = False
-    if Raymond_says_Millicent == Millicent:
-        Raymond = True
+        Fidel = False
+    if Leda_says_Fidel == Fidel:
+        Leda = True
     else:
-        Raymond = False
-    return Raymond
+        Leda = False
+    return Leda
 
 Q: Question: Kristian tells the truth. Michaela says Kristian lies. Raymond says Michaela tells the truth. Osvaldo says Raymond tells the truth. Jamey says Osvaldo tells the truth. Does Jamey tell the truth?
 A: Let's think step by step.
@@ -96,13 +96,27 @@ A: Let's think step by step.
 (5) Jamey says Osvaldo tells the truth. Since we know from (4) that Osvaldo lies, if Jamey says Osvaldo tells the truth, then Jamey lies.
 Now, the question asks: Does Jamey tell the truth? We know from (5) that Jamey lies. So the answer is No.
 
-Q: web of lies q
-
-# solution in Python:
-
-
-
-
 def solution():
-    return
+    Kristian = True
+    Michaela_says_Kristian = False
+    Raymond_says_Michaela = True
+    Osvaldo_says_Raymond = True
+    Jamey_says_Osvaldo = True
+    if Michaela_says_Kristian == Kristian:
+        Michaela = True
+    else:
+        Michaela = False
+    if Raymond_says_Michaela == Michaela:
+        Raymond = True
+    else:
+        Raymond = False
+    if Osvaldo_says_Raymond == Raymond:
+        Osvaldo = True
+    else:
+        Osvaldo = False
+    if Jamey_says_Osvaldo == Osvaldo:
+        Jamey = True
+    else:
+        Jamey = False
+    return Jamey
 """
