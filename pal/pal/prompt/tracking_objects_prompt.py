@@ -154,4 +154,4 @@ At the end of the dance, Alice is dancing with Patrick. So the answer is (C).
 
 def solution():
     return
-"""
+""".strip() + '\n'

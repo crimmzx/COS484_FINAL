@@ -57,4 +57,4 @@ Q: web of lies q
 
 def solution():
     return
-"""
+""".strip() + '\n'
