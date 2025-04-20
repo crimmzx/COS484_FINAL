@@ -1,0 +1,10 @@
+Metadata-Version: 2.4
+Name: pal
+Version: 0.1
+Summary: PAL
+License-File: LICENSE
+Requires-Dist: openai
+Requires-Dist: python-dateutil
+Dynamic: license-file
+Dynamic: requires-dist
+Dynamic: summary
