@@ -21,11 +21,11 @@ import argparse
 import tqdm
 
 from pal import interface
-from pal.prompt import penguin_prompt
+from pal.prompt import tracking_objects_prompt
 
 
-DATA_PATH = 'datasets/penguins_in_a_table.json'
-OUTPUT_PATH = 'eval_results/penguins_in_a_table.jsonl'
+DATA_PATH = 'datasets/tracking_objects.json'
+OUTPUT_PATH = "eval_results/tracking_objects.jsonl"
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--append', action='store_true')
@@ -54,27 +54,29 @@ with open(OUTPUT_PATH, 'a' if args.append else 'w') as f:
     for x in pbar:
         question = task_prefix + x['input']
         result = copy.copy(x)
-        
+
         try:
-            ans = itf.run(penguin_prompt.PENGUIN_PROMPT.format(question=question))
+            ans = itf.run(
+                tracking_objects_prompt.TRACKING_OBJECTS_PROMPT.format(question=question)
+            )
             if isinstance(ans, float):
                 ans = int(ans)
             ans_str = str(ans)
             result['answer_str'] = ans_str
         except:
             ans_str = ""
-            
+
         if ans_str in x['target_scores']:
             score = x['target_scores'][ans_str]
         else:
             score = 0
 
         scores.append(score)
-        
+
         result['score'] = score
         result['generation'] = itf.history
         f.write(json.dumps(result) + '\n')
-        
+
         itf.clear_history()
         f.flush()
 
