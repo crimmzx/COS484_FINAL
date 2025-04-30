@@ -36,22 +36,10 @@ def solution():
     Vina_says_Jerry = True
     Millicent_says_Vina = False
     Raymond_says_Millicent = False
-    if Jerry_says_Fidel == Fidel:
-        Jerry = True
-    else:
-        Jerry = False
-    if Vina_says_Jerry == Jerry:
-        Vina = True
-    else:
-        Vina = False
-    if Millicent_says_Vina == Vina:
-        Millicent = True
-    else:
-        Millicent = False
-    if Raymond_says_Millicent == Millicent:
-        Raymond = True
-    else:
-        Raymond = False
+    Jerry = Jerry_says_Fidel == Fidel
+    Vina = Vina_says_Jerry == Jerry
+    Millicent = Millicent_says_Vina == Vina
+    Raymond = Raymond_says_Millicent == Millicent
     return Raymond
 
 Q: Question: Kristian lies. Millie says Kristian lies. Maybelle says Millie tells the truth. Fidel says Maybelle lies. Leda says Fidel lies. Does Leda tell the truth?
@@ -69,22 +57,10 @@ def solution():
     Maybelle_says_Millie = True
     Fidel_says_Maybelle = False
     Leda_says_Fidel = False
-    if Millie_says_Kristian == Kristian:
-        Millie = True
-    else:
-        Millie = False
-    if Maybelle_says_Millie == Millie:
-        Maybelle = True
-    else:
-        Maybelle = False
-    if Fidel_says_Maybelle == Maybelle:
-        Fidel = True
-    else:
-        Fidel = False
-    if Leda_says_Fidel == Fidel:
-        Leda = True
-    else:
-        Leda = False
+    Millie = Millie_says_Kristian == Kristian
+    Maybelle = Maybelle_says_Millie == Millie
+    Fidel = Fidel_says_Maybelle == Maybelle
+    Leda = Leda_says_Fidel == Fidel
     return Leda
 
 Q: Question: Kristian tells the truth. Michaela says Kristian lies. Raymond says Michaela tells the truth. Osvaldo says Raymond tells the truth. Jamey says Osvaldo tells the truth. Does Jamey tell the truth?
@@ -102,22 +78,10 @@ def solution():
     Raymond_says_Michaela = True
     Osvaldo_says_Raymond = True
     Jamey_says_Osvaldo = True
-    if Michaela_says_Kristian == Kristian:
-        Michaela = True
-    else:
-        Michaela = False
-    if Raymond_says_Michaela == Michaela:
-        Raymond = True
-    else:
-        Raymond = False
-    if Osvaldo_says_Raymond == Raymond:
-        Osvaldo = True
-    else:
-        Osvaldo = False
-    if Jamey_says_Osvaldo == Osvaldo:
-        Jamey = True
-    else:
-        Jamey = False
+    Michaela = Michaela_says_Kristian == Kristian
+    Raymond = Raymond_says_Michaela == Michaela
+    Osvaldo = Osvaldo_says_Raymond == Raymond
+    Jamey = Jamey_says_Osvaldo == Osvaldo
     return Jamey
 
     
