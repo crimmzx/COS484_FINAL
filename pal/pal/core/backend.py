@@ -11,20 +11,27 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 import openai
+from openai import OpenAI
 import time
 import os
 
-openai.api_key = os.getenv('OPENAI_API_KEY')
+client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
+
 
 # GPT-3 API
-def call_gpt(prompt, model='code-davinci-002', stop=None, temperature=0., top_p=1.0,
-        max_tokens=128, majority_at=None):
+def call_gpt(
+    prompt,
+    model="gpt-4",
+    stop=None,
+    temperature=0.0,
+    top_p=1.0,
+    max_tokens=128,
+    majority_at=None,
+):
     num_completions = majority_at if majority_at is not None else 1
     num_completions_batch_size = 5
-    
-        
+
     completions = []
     for i in range(20 * (num_completions // num_completions_batch_size + 1)):
         try:
@@ -52,53 +59,52 @@ def call_gpt(prompt, model='code-davinci-002', stop=None, temperature=0., top_p=
             completions.extend(ans)
             if len(completions) >= num_completions:
                 return completions[:num_completions]
-        except openai.error.RateLimitError as e:
+        except openai.APIError as e:
             time.sleep(min(i**2, 60))
     raise RuntimeError('Failed to call GPT API')
 
+
 def completions_api(model, max_tokens, stop, prompt, temperature,
             top_p, n, best_of):
-    ans = openai.Completion.create(
-        model=model,
-        max_tokens=max_tokens,
-        stop=stop,
-        prompt=prompt,
-        temperature=temperature,
-        top_p=top_p,
-        n=n,
-        best_of=best_of)
-    return [choice['text'] for choice in ans['choices']]
+    ans = client.completions.create(model=model,
+    max_tokens=max_tokens,
+    stop=stop,
+    prompt=prompt,
+    temperature=temperature,
+    top_p=top_p,
+    n=n,
+    best_of=best_of)
+    return [choice['text'] for choice in ans.choices]
 
 def chat_api(model, max_tokens, stop, prompt, temperature,
             top_p, n, best_of):
-    ans = openai.ChatCompletion.create(
-        model=model,
-        max_tokens=max_tokens,
-        stop=stop,
-        messages=[
-            {'role': 'system', 'content': 'You are a helpful assistant that can write Python code that solves mathematical reasoning questions similarly to the examples that you will be provided.'},
-            {'role': 'user', 'content': prompt}],
-        temperature=temperature,
-        top_p=top_p,
-        n=n)
-    return [choice['message']['content'] for choice in ans['choices']]
+    ans = client.chat.completions.create(model=model,
+    max_tokens=max_tokens,
+    stop=stop,
+    messages=[
+        {'role': 'system', 'content': 'You are a helpful assistant that can write Python code that solves mathematical reasoning questions similarly to the examples that you will be provided.'},
+        {'role': 'user', 'content': prompt}],
+    temperature=temperature,
+    top_p=top_p,
+    n=n)
+    return [choice.message.content for choice in ans.choices]
 
 
-def call_chat_gpt(messages, model='gpt-3.5-turbo', stop=None, temperature=0., top_p=1.0, max_tokens=128):
+def call_chat_gpt(
+    messages, model="gpt-4", stop=None, temperature=0.0, top_p=1.0, max_tokens=128
+):
     wait = 1
     while True:
         try:
-            ans = openai.ChatCompletion.create(
-                model=model,
-                max_tokens=max_tokens,
-                stop=stop,
-                messages=messages,
-                temperature=temperature,
-                top_p=top_p,
-                n=1
-            )
-            return ans.choices[0]['message']['content']
-        except openai.error.RateLimitError as e:
+            ans = client.chat.completions.create(model=model,
+            max_tokens=max_tokens,
+            stop=stop,
+            messages=messages,
+            temperature=temperature,
+            top_p=top_p,
+            n=1,)
+            return ans.choices[0].message.content
+        except openai.APIError as e:
             time.sleep(min(wait, 60))
             wait *= 2
     raise RuntimeError('Failed to call chat gpt')
