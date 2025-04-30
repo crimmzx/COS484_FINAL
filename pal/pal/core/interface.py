@@ -36,12 +36,12 @@ class timeout:
 
 
 class TextInterface:
-    
+
     def __init__(
         self,
-        model: str = 'code-davinci-002',
-        answer_prefix: str = 'The answer is:',
-        stop: str = '\n\n\n',
+        model: str = "gpt-4",
+        answer_prefix: str = "The answer is:",
+        stop: str = "\n\n\n",
         extract_answer: Optional[Callable[[str], Any]] = None,
     ):
         self.history = []
@@ -49,34 +49,34 @@ class TextInterface:
         self.extract_answer_fn = extract_answer
         self.stop = stop
         self.model = model
-        
+
     def clear_history(self):
         self.history = []
-    
+
     def extract_answer(self, gen: str):
         if self.extract_answer_fn:
             return self.extract_answer_fn (gen)
         last_line = gen.strip().split('\n')[-1]
         return last_line[len(self.answer_prefix):].strip()
-    
+
     def run(self, prompt, temperature=0.0, top_p=1.0, majority_at=None, max_tokens=512):
         gen = call_gpt(prompt, model=self.model, stop=self.stop, 
             temperature=temperature, top_p=top_p, max_tokens=max_tokens, majority_at=majority_at)
         self.history.append(gen)
         return self.extract_answer(gen)
-        
+
 
 class ProgramInterface:
-    
+
     def __init__(
         self,
-        model: str = 'code-davinci-002',
+        model: str = "gpt-4",
         runtime: Optional[Any] = None,
-        stop: str = '\n\n',
+        stop: str = "\n\n",
         get_answer_symbol: Optional[str] = None,
         get_answer_expr: Optional[str] = None,
         get_answer_from_stdout: bool = False,
-        verbose: bool = False
+        verbose: bool = False,
     ) -> None:
 
         self.model = model
@@ -87,13 +87,13 @@ class ProgramInterface:
         self.answer_expr = get_answer_expr
         self.get_answer_from_stdout = get_answer_from_stdout
         self.verbose = verbose
-        
+
     def clear_history(self):
         self.history = []
-    
+
     def process_generation_to_code(self, gens: str):
         return [g.split('\n') for g in gens]
-    
+
     def generate(self, prompt: str, temperature: float =0.0, top_p: float =1.0, 
             max_tokens: int =512, majority_at: int =None, ):
         gens = call_gpt(prompt, model=self.model, stop=self.stop, 
@@ -103,7 +103,7 @@ class ProgramInterface:
         code = self.process_generation_to_code(gens)
         self.history.append(gens)
         return code
-    
+
     def execute(self, code: Optional[List[str]] = None):
         code = code if code else self.code
         if self.get_answer_from_stdout:
@@ -121,11 +121,11 @@ class ProgramInterface:
         else:
             self.runtime.exec_code('\n'.join(code[:-1]))
             return self.runtime.eval_code(code[-1])
-    
+
     def run(self, prompt: str, time_out: float =10, temperature: float =0.0, top_p: float =1.0, 
             max_tokens: int =512, majority_at: int =None):
         code_snippets = self.generate(prompt, majority_at=majority_at, temperature=temperature, top_p=top_p, max_tokens=max_tokens)
-        
+
         results = []
         for code in code_snippets:
             with timeout(time_out):
@@ -135,15 +135,15 @@ class ProgramInterface:
                     print(e)
                     continue
                 results.append(exec_result)
-        
+
         if len(results) == 0:
             print('No results was produced. A common reason is that the generated code snippet is not valid or did not return any results.')
             return None
-        
+
         counter = Counter(results)
         return counter.most_common(1)[0][0]
-    
-    
+
+
 SYSTEM_MESSAGES = 'You are a helpful python programmer.'
 class ProgramChatInterface(ProgramInterface):
     def __init__(self, *args, system_message: str = SYSTEM_MESSAGES, **kwargs):
